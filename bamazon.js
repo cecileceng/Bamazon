@@ -1,5 +1,6 @@
 var mysql = require('mysql');
 var inquirer = require('inquirer');
+var Table = require('cli-table');
 
 var connection = mysql.createConnection({
 	host: 'localhost',
@@ -13,11 +14,22 @@ connection.connect(function(err) {
 	if (err) throw err;
 	console.log('Connected as id' + connection.threadId);
 	startBuying();
+})
+
+function printStuff(res) {
+	var table = new Table({
+		head: ['Item ID', 'Product Name', 'Department', 'Cost', 'Stock']
+		, colWidths: [10, 40, 40, 8, 8]
+	});
+	for (var i = 0; i < res.length; i++) {
+		table.push([res[i].itemID, res[i].product_name, res[i].department_name, res[i].item_cost, res[i].stock_quantity]);
+	}
+	console.log(table.toString());
 }
 
 var startBuying = function() {
 	connection.query('SELECT * FROM products', function(err, res) {
-		console.log(res);
+		printStuff(res);
 		inquirer.prompt({
 			name: 'choice',
 			type: 'rawlist',
@@ -39,7 +51,7 @@ var startBuying = function() {
 						message: 'How many would you like to purchase?'
 					}).then(function(answer) {
 						if (chosenItem.highestbid < parseInt(answer.bid)) {
-							connection.query('UPDATE products SET ? WHERE ?', [{
+							connection.query('UPDATE products SET ? WHERE ?', [{ // TODO: Subtract from existing quantity
 								user_purchase: answer.purchase
 							}, {
 								id: chosenItem.id
@@ -56,4 +68,3 @@ var startBuying = function() {
 		})
 	})
 }
-startBuying();
