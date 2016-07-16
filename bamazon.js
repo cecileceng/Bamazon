@@ -35,7 +35,7 @@ var startBuying = function() {
 			choiceArray.push(res[i].product_name);
 		}
 		inquirer.prompt([{
-			name: 'purchase',
+			name: 'item',
 			type: 'input',
 			message: 'Which item would you like to purchase? (Enter the Item ID)'
 		},
@@ -44,20 +44,21 @@ var startBuying = function() {
 			type: 'input',
 			message: 'How many would you like to purchase?'
 		}]).then(function(answer) {
-			console.log(itemID);
+			console.log(answer);
 			var chosenItem = res[itemID-1];
 			console.log(chosenItem);
-			if (chosenItem.highestbid < parseInt(answer.bid)) {
+			if (chosenItem < parseInt(answer.bid)) {
 				connection.query('UPDATE products SET ? WHERE ?', [{ // TODO: Subtract from existing quantity
 					user_purchase: answer.purchase
 				}, {
-					id: chosenItem.id
+					id: chosenItem.itemID
 				}], function(err, res) {
 					console.log('Your purchase was successful!');
 					startBuying();
 				}); 
 			} else {
 				console.log('There are not enough in stock for you to purchase that many.');
+				startBuying();
 			}
 		})
 	})
