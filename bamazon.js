@@ -45,7 +45,7 @@ var startBuying = function() {
 			message: 'How many would you like to purchase?'
 		}]).then(function(answer) {
 			console.log(answer);
-			var chosenItem = res[itemID-1];
+]			var chosenItem = res[itemID-1];
 			console.log(chosenItem);
 			if (chosenItem < parseInt(answer.bid)) {
 				connection.query('UPDATE products SET ? WHERE ?', [{ // TODO: Subtract from existing quantity
