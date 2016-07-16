@@ -19,7 +19,7 @@ connection.connect(function(err) {
 function printStuff(res) {
 	var table = new Table({
 		head: ['Item ID', 'Product Name', 'Department', 'Cost', 'Stock']
-		, colWidths: [10, 40, 40, 8, 8]
+		, colWidths: [10, 45, 40, 8, 8]
 	});
 	for (var i = 0; i < res.length; i++) {
 		table.push([res[i].itemID, res[i].product_name, res[i].department_name, res[i].item_cost, res[i].stock_quantity]);
