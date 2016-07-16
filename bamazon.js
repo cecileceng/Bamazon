@@ -44,14 +44,14 @@ var startBuying = function() {
 			type: 'input',
 			message: 'How many would you like to purchase?'
 		}]).then(function(answer) {
-			console.log(answer);
-]			var chosenItem = res[itemID-1];
+			console.log(itemID);
+			var chosenItem = res[itemID-1];
 			console.log(chosenItem);
 			if (chosenItem < parseInt(answer.bid)) {
 				connection.query('UPDATE products SET ? WHERE ?', [{ // TODO: Subtract from existing quantity
 					user_purchase: answer.purchase
 				}, {
-					id: chosenItem.itemID
+					id: chosenItem.id
 				}], function(err, res) {
 					console.log('Your purchase was successful!');
 					startBuying();
