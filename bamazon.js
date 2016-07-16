@@ -44,18 +44,15 @@ var startBuying = function() {
 			type: 'input',
 			message: 'How many would you like to purchase?'
 		}]).then(function(answer) {
+			console.log(answer);
+			var itemID = answer.item;
 			console.log(itemID);
 			var chosenItem = res[itemID-1];
 			console.log(chosenItem);
-			if (chosenItem < parseInt(answer.bid)) {
-				connection.query('UPDATE products SET ? WHERE ?', [{ // TODO: Subtract from existing quantity
-					user_purchase: answer.purchase
-				}, {
-					id: chosenItem.id
-				}], function(err, res) {
-					console.log('Your purchase was successful!');
-					startBuying();
-				}); 
+			var newQuantity = chosenItem.stock_quantity - answer.quantity;
+			if (newQuantity >= 0) {
+				connection.query('UPDATE products SET ? WHERE itemID = ?', [{ stock_quantity: newQuantity }, itemID]);
+				startBuying();
 			} else {
 				console.log('There are not enough in stock for you to purchase that many.');
 				startBuying();
